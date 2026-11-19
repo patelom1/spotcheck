@@ -20,7 +20,8 @@ from spotcheck.common import REPO_ROOT
 CONFIG = REPO_ROOT / "configs" / "experiments.yaml"
 RUNS = REPO_ROOT / "runs"
 TRAIN_KEYS = {"imgsz", "epochs", "batch", "patience", "optimizer", "seed", "hsv_v", "hsv_s",
-              "degrees", "fliplr", "flipud", "mosaic", "close_mosaic", "lr0", "device", "workers"}
+              "degrees", "fliplr", "flipud", "mosaic", "close_mosaic", "lr0", "device", "workers",
+              "warmup_epochs"}
 
 
 def load_config(path: Path = CONFIG) -> dict:
