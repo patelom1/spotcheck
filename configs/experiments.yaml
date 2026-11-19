@@ -1,0 +1,78 @@
+# SpotCheck experiments (Owner: Om). Run one with:
+#   python -m spotcheck.train --exp source_only
+# `init` is an Ultralytics checkpoint (COCO-pretrained) or another experiment's
+# name, meaning "start from that run's best.pt".
+#
+# Setup: PKLot cross-site. Source = UFPR04 + UFPR05, new site (target) = PUCPR.
+# Every model is evaluated on the same held-out target test days.
+
+defaults:
+  imgsz: 960          # PUCPR spaces are small and far; 640 loses them
+  epochs: 40
+  batch: 16
+  patience: 10
+  optimizer: auto
+  seed: 0
+  hsv_v: 0.5          # brightness/color jitter for weather changes
+  hsv_s: 0.6
+  degrees: 5.0
+  fliplr: 0.5
+  flipud: 0.0
+  mosaic: 1.0
+  close_mosaic: 5
+
+experiments:
+  # E1: source lots only, tested at the new site -> size of the domain gap
+  source_only:
+    data: datasets/xsite/source.yaml
+    init: yolov8n.pt
+    epochs: 30
+
+  # E2: only 100 labeled images from the new site, no public pre-training
+  target_only:
+    data: datasets/xsite/target_100.yaml
+    init: yolov8n.pt
+
+  # E3 (main method): E1 fine-tuned on 100 new-site images
+  finetune:
+    data: datasets/xsite/target_100.yaml
+    init: source_only
+    lr0: 0.002
+
+  # E4: source + 100 new-site images trained together
+  combined:
+    data: datasets/xsite/combined_100.yaml
+    init: yolov8n.pt
+
+  # E5: model size (accuracy vs. speed)
+  source_only_s:
+    data: datasets/xsite/source.yaml
+    init: yolov8s.pt
+    epochs: 30
+  finetune_s:
+    data: datasets/xsite/target_100.yaml
+    init: source_only_s
+    lr0: 0.002
+
+  # Label efficiency: how many new-site images does fine-tuning need?
+  finetune_25:
+    data: datasets/xsite/target_25.yaml
+    init: source_only
+    lr0: 0.002
+  finetune_50:
+    data: datasets/xsite/target_50.yaml
+    init: source_only
+    lr0: 0.002
+  finetune_200:
+    data: datasets/xsite/target_200.yaml
+    init: source_only
+    lr0: 0.002
+
+  # Smoke test on synthetic data (CPU, ~2 min). Not a real result.
+  smoke:
+    data: datasets/synthetic/data.yaml
+    init: yolov8n.pt
+    epochs: 2
+    imgsz: 480
+    batch: 8
+    workers: 0

@@ -1,0 +1,12 @@
+ultralytics>=8.3,<9
+opencv-python>=4.8
+numpy
+pyyaml
+matplotlib
+fastapi>=0.110
+uvicorn[standard]
+python-multipart
+gradio>=4.0
+roboflow
+pytest
+httpx
