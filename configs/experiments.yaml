@@ -37,7 +37,9 @@ experiments:
   finetune:
     data: datasets/xsite/target_100.yaml
     init: source_only
-    lr0: 0.002
+    optimizer: AdamW     # explicit, so lr0 is used ("auto" ignores lr0)
+    lr0: 0.0005          # small steps: adapt without erasing what E1 learned
+    warmup_epochs: 0     # warmup is >=100 iterations, longer than these tiny runs
 
   # E4: source + 100 new-site images trained together
   combined:
@@ -52,21 +54,31 @@ experiments:
   finetune_s:
     data: datasets/xsite/target_100.yaml
     init: source_only_s
-    lr0: 0.002
+    optimizer: AdamW     # explicit, so lr0 is used ("auto" ignores lr0)
+    lr0: 0.0005          # small steps: adapt without erasing what E1 learned
+    warmup_epochs: 0     # warmup is >=100 iterations, longer than these tiny runs
 
   # Label efficiency: how many new-site images does fine-tuning need?
   finetune_25:
     data: datasets/xsite/target_25.yaml
     init: source_only
-    lr0: 0.002
+    epochs: 75          # ~same number of training steps as the 100-image run
+    optimizer: AdamW     # explicit, so lr0 is used ("auto" ignores lr0)
+    lr0: 0.0005          # small steps: adapt without erasing what E1 learned
+    warmup_epochs: 0     # warmup is >=100 iterations, longer than these tiny runs
   finetune_50:
     data: datasets/xsite/target_50.yaml
     init: source_only
-    lr0: 0.002
+    epochs: 40          # ~same number of training steps as the 100-image run
+    optimizer: AdamW     # explicit, so lr0 is used ("auto" ignores lr0)
+    lr0: 0.0005          # small steps: adapt without erasing what E1 learned
+    warmup_epochs: 0     # warmup is >=100 iterations, longer than these tiny runs
   finetune_200:
     data: datasets/xsite/target_200.yaml
     init: source_only
-    lr0: 0.002
+    optimizer: AdamW     # explicit, so lr0 is used ("auto" ignores lr0)
+    lr0: 0.0005          # small steps: adapt without erasing what E1 learned
+    warmup_epochs: 0     # warmup is >=100 iterations, longer than these tiny runs
 
   # Smoke test on synthetic data (CPU, ~2 min). Not a real result.
   smoke:
